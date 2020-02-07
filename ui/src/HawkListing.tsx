@@ -1,14 +1,7 @@
 import React, { useState } from "react";
-import { Button, Input, Table } from "semantic-ui-react";
+import { Button, Header, Input, Table } from "semantic-ui-react";
 import "./HawkListing.css";
-
-interface Hawk {
-  [key: string]: any;
-  id: number;
-  name: string;
-  size: string;
-  gender: string;
-}
+import { Hawk } from "./api";
 
 export interface HawkListingProps {
   hawks: Hawk[];
@@ -99,6 +92,18 @@ const HawkListing: React.FC<HawkListingProps> = ({ hawks }) => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
+          {!sortedHawks.length && (
+            <Table.Row>
+              <Table.Cell colSpan="4" className="HawkListing__emptyState">
+                <div>
+                  <Header as="h2">
+                    There aren't currently any hawks to display
+                  </Header>
+                </div>
+                <Button primary>Add a hawk</Button>
+              </Table.Cell>
+            </Table.Row>
+          )}
           {sortedHawks.map(hawk => (
             <Table.Row key={hawk.id}>
               <Table.Cell data-testid="HawkListing__nameCol">

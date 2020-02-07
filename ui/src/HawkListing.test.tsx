@@ -1,13 +1,18 @@
 import HawkListing, { HawkListingProps } from "./HawkListing";
 import * as React from "react";
 import { render, fireEvent } from "@testing-library/react";
+import { Hawk } from "./api";
 
 describe("HawkListing", () => {
-  const hawks = [
-    { id: 1, name: "Cooper's Hawk", size: "small", gender: "male" },
-    { id: 2, name: "Ferruginous Hawk", size: "medium", gender: "male" },
-    { id: 3, name: "Swainson's Hawk", size: "large", gender: "male" }
-  ];
+  let hawks: Hawk[] = [];
+
+  beforeEach(() => {
+    hawks = [
+      { id: 1, name: "Cooper's Hawk", size: "small", gender: "male" },
+      { id: 2, name: "Ferruginous Hawk", size: "medium", gender: "male" },
+      { id: 3, name: "Swainson's Hawk", size: "large", gender: "male" }
+    ];
+  });
 
   test("displays a table of hawks", () => {
     const { getAllByText } = subject();
@@ -64,6 +69,15 @@ describe("HawkListing", () => {
     const allNameCols = getAllByTestId("HawkListing__nameCol");
 
     expect(allNameCols).toHaveLength(1);
+  });
+
+  test("there is an empty state when no hawks exist", () => {
+    hawks = [];
+
+    const { getByText } = subject();
+
+    getByText("There aren't currently any hawks to display");
+    getByText("Add a hawk");
   });
 
   const subject = (props?: HawkListingProps) => {
