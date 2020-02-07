@@ -27,10 +27,10 @@ describe("HawkEditor", () => {
     });
 
     fireEvent.click(getByTestId("HawkEditor__sizeSelect"));
-    fireEvent.click(getAllByText("Small")[0]);
+    fireEvent.click(getAllByText("Small")[1]);
 
     fireEvent.click(getByTestId("HawkEditor__genderSelect"));
-    fireEvent.click(getAllByText("Female")[0]);
+    fireEvent.click(getAllByText("Female")[1]);
 
     fireEvent.change(getByTestId("HawkEditor__lengthFrom"), {
       target: { value: "50" }
@@ -77,7 +77,21 @@ describe("HawkEditor", () => {
 
     fireEvent.click(getByText("Save"));
 
-    expect(onSave).toHaveBeenCalled();
+    expect(onSave).toHaveBeenCalledWith({
+      name: "Sweet hawk",
+      size: "SMALL",
+      gender: "FEMALE",
+      lengthFrom: "50",
+      lengthTo: "100",
+      wingspanFrom: "50",
+      wingspanTo: "100",
+      weightFrom: "50",
+      weightTo: "100",
+      url: "https://google.com",
+      color: "Prolly brown.",
+      behavior: "They're super dope birbs.",
+      habitat: "They live in pretty qewl places."
+    });
   });
 
   const subject = () => {
