@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Button, Header, Input, Table, Transition } from "semantic-ui-react";
+import { Button, Header, Input, Table } from "semantic-ui-react";
 import "./HawkListing.css";
-import { Hawk } from "./api";
+import { Hawk, saveHawk } from "./api";
 import HawkEditor from "./HawkEditor";
 
 export interface HawkListingProps {
@@ -33,6 +33,12 @@ const HawkListing: React.FC<HawkListingProps> = ({ hawks }) => {
 
   const onEnterFilterInput = (e: React.KeyboardEvent<HTMLInputElement>) =>
     e.key === "Enter" && setFilterQuery(filterInput);
+
+  const onSave = (hawk: Hawk) => {
+    saveHawk(hawk).then(() => {
+      setShowEditor(false);
+    });
+  };
 
   const sortHawks = (a: Hawk, b: Hawk) => {
     const aColumn = a[sortedColumn || "name"].toUpperCase();
@@ -143,7 +149,7 @@ const HawkListing: React.FC<HawkListingProps> = ({ hawks }) => {
         <HawkEditor
           showEditor={showEditor}
           onCancel={() => setShowEditor(false)}
-          onSave={() => {}}
+          onSave={onSave}
         />
       </div>
     </div>

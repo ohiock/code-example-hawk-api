@@ -9,8 +9,8 @@ import {
   Transition
 } from "semantic-ui-react";
 import * as React from "react";
+import { useState } from "react";
 import "./HawkEditor.css";
-import { Reducer, useReducer, useState } from "react";
 import { Hawk } from "./api";
 
 const hawkSizeSelectOptions = [
@@ -25,19 +25,20 @@ const hawkGenderSelectOptions = [
 ];
 
 const initialHawkState: Hawk = {
+  id: 0,
   name: "",
-  size: "",
   gender: "",
-  lengthFrom: "0",
-  lengthTo: "0",
-  wingspanFrom: "0",
-  wingspanTo: "0",
-  weightFrom: "0",
-  weightTo: "0",
-  url: "",
-  color: "",
-  behavior: "",
-  habitat: ""
+  size: "",
+  wingspanBegin: "",
+  wingspanEnd: "",
+  weightBegin: "",
+  weightEnd: "",
+  lengthBegin: "",
+  lengthEnd: "",
+  colorDescription: "",
+  behaviorDescription: "",
+  habitatDescription: "",
+  pictureUrl: ""
 };
 
 const HawkEditor: React.FC<{
@@ -97,9 +98,9 @@ const HawkEditor: React.FC<{
               fluid
               type="number"
               labelPosition="right"
-              value={hawk.lengthFrom}
+              value={hawk.lengthBegin}
               onChange={(e, { value }) =>
-                setHawk({ ...hawk, lengthFrom: value })
+                setHawk({ ...hawk, lengthBegin: value })
               }
             >
               <Label basic>From</Label>
@@ -110,8 +111,10 @@ const HawkEditor: React.FC<{
               fluid
               type="number"
               labelPosition="right"
-              value={hawk.lengthTo}
-              onChange={(e, { value }) => setHawk({ ...hawk, lengthTo: value })}
+              value={hawk.lengthEnd}
+              onChange={(e, { value }) =>
+                setHawk({ ...hawk, lengthEnd: value })
+              }
             >
               <Label basic>To</Label>
               <input data-testid="HawkEditor__lengthTo" />
@@ -124,9 +127,9 @@ const HawkEditor: React.FC<{
               fluid
               type="number"
               labelPosition="right"
-              value={hawk.wingspanFrom}
+              value={hawk.wingspanBegin}
               onChange={(e, { value }) =>
-                setHawk({ ...hawk, wingspanFrom: value })
+                setHawk({ ...hawk, wingspanBegin: value })
               }
             >
               <Label basic>From</Label>
@@ -137,9 +140,9 @@ const HawkEditor: React.FC<{
               fluid
               type="number"
               labelPosition="right"
-              value={hawk.wingspanTo}
+              value={hawk.wingspanEnd}
               onChange={(e, { value }) =>
-                setHawk({ ...hawk, wingspanTo: value })
+                setHawk({ ...hawk, wingspanEnd: value })
               }
             >
               <Label basic>To</Label>
@@ -153,9 +156,9 @@ const HawkEditor: React.FC<{
               fluid
               type="number"
               labelPosition="right"
-              value={hawk.weightFrom}
+              value={hawk.weightBegin}
               onChange={(e, { value }) =>
-                setHawk({ ...hawk, weightFrom: value })
+                setHawk({ ...hawk, weightBegin: value })
               }
             >
               <Label basic>From</Label>
@@ -166,8 +169,10 @@ const HawkEditor: React.FC<{
               fluid
               type="number"
               labelPosition="right"
-              value={hawk.weightTo}
-              onChange={(e, { value }) => setHawk({ ...hawk, weightTo: value })}
+              value={hawk.weightEnd}
+              onChange={(e, { value }) =>
+                setHawk({ ...hawk, weightEnd: value })
+              }
             >
               <Label basic>To</Label>
               <input data-testid="HawkEditor__weightTo" />
@@ -182,17 +187,19 @@ const HawkEditor: React.FC<{
               <Input
                 fluid
                 placeholder="Where can we find it on the web?"
-                value={hawk.url}
-                onChange={(e, { value }) => setHawk({ ...hawk, url: value })}
+                value={hawk.pictureUrl}
+                onChange={(e, { value }) =>
+                  setHawk({ ...hawk, pictureUrl: value })
+                }
               />
               <Header textAlign="right" className="HawkEditor__header" as="h4">
                 Color description
               </Header>
               <TextArea
                 placeholder="Let me guess: brown?"
-                value={hawk.color}
+                value={hawk.colorDescription}
                 onChange={(e, { value }) =>
-                  setHawk({ ...hawk, color: value as string })
+                  setHawk({ ...hawk, colorDescription: value as string })
                 }
               />
               <Header textAlign="right" className="HawkEditor__header" as="h4">
@@ -200,9 +207,9 @@ const HawkEditor: React.FC<{
               </Header>
               <TextArea
                 placeholder="What does it like to do in its free time?"
-                value={hawk.behavior}
+                value={hawk.behaviorDescription}
                 onChange={(e, { value }) =>
-                  setHawk({ ...hawk, behavior: value as string })
+                  setHawk({ ...hawk, behaviorDescription: value as string })
                 }
               />
               <Header textAlign="right" className="HawkEditor__header" as="h4">
@@ -210,9 +217,9 @@ const HawkEditor: React.FC<{
               </Header>
               <TextArea
                 placeholder="Favorite chill spots?"
-                value={hawk.habitat}
+                value={hawk.habitatDescription}
                 onChange={(e, { value }) =>
-                  setHawk({ ...hawk, habitat: value as string })
+                  setHawk({ ...hawk, habitatDescription: value as string })
                 }
               />
             </div>

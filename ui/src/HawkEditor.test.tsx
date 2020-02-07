@@ -1,4 +1,4 @@
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import HawkEditor from "./HawkEditor";
 import * as React from "react";
 
@@ -78,19 +78,20 @@ describe("HawkEditor", () => {
     fireEvent.click(getByText("Save"));
 
     expect(onSave).toHaveBeenCalledWith({
+      id: 0,
       name: "Sweet hawk",
       size: "SMALL",
       gender: "FEMALE",
-      lengthFrom: "50",
-      lengthTo: "100",
-      wingspanFrom: "50",
-      wingspanTo: "100",
-      weightFrom: "50",
-      weightTo: "100",
-      url: "https://google.com",
-      color: "Prolly brown.",
-      behavior: "They're super dope birbs.",
-      habitat: "They live in pretty qewl places."
+      lengthBegin: "50",
+      lengthEnd: "100",
+      wingspanBegin: "50",
+      wingspanEnd: "100",
+      weightBegin: "50",
+      weightEnd: "100",
+      pictureUrl: "https://google.com",
+      colorDescription: "Prolly brown.",
+      behaviorDescription: "They're super dope birbs.",
+      habitatDescription: "They live in pretty qewl places."
     });
   });
 

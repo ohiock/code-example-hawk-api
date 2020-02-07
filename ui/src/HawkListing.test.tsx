@@ -1,16 +1,66 @@
 import HawkListing, { HawkListingProps } from "./HawkListing";
 import * as React from "react";
-import { render, fireEvent } from "@testing-library/react";
-import { Hawk } from "./api";
+import { render, fireEvent, waitForElement } from "@testing-library/react";
+import { getAllHawks, Hawk, saveHawk } from "./api";
+import { act } from "react-dom/test-utils";
+
+jest.mock("./api", () => ({
+  saveHawk: jest.fn().mockResolvedValue({})
+}));
 
 describe("HawkListing", () => {
   let hawks: Hawk[] = [];
 
   beforeEach(() => {
     hawks = [
-      { id: 1, name: "Cooper's Hawk", size: "small", gender: "male" },
-      { id: 2, name: "Ferruginous Hawk", size: "medium", gender: "male" },
-      { id: 3, name: "Swainson's Hawk", size: "large", gender: "male" }
+      {
+        id: 1,
+        name: "Cooper's Hawk",
+        size: "small",
+        gender: "male",
+        wingspanBegin: "",
+        wingspanEnd: "",
+        weightBegin: "",
+        weightEnd: "",
+        lengthBegin: "",
+        lengthEnd: "",
+        colorDescription: "",
+        behaviorDescription: "",
+        habitatDescription: "",
+        pictureUrl: ""
+      },
+      {
+        id: 2,
+        name: "Ferruginous Hawk",
+        size: "medium",
+        gender: "male",
+        wingspanBegin: "",
+        wingspanEnd: "",
+        weightBegin: "",
+        weightEnd: "",
+        lengthBegin: "",
+        lengthEnd: "",
+        colorDescription: "",
+        behaviorDescription: "",
+        habitatDescription: "",
+        pictureUrl: ""
+      },
+      {
+        id: 3,
+        name: "Swainson's Hawk",
+        size: "large",
+        gender: "male",
+        wingspanBegin: "",
+        wingspanEnd: "",
+        weightBegin: "",
+        weightEnd: "",
+        lengthBegin: "",
+        lengthEnd: "",
+        colorDescription: "",
+        behaviorDescription: "",
+        habitatDescription: "",
+        pictureUrl: ""
+      }
     ];
   });
 
@@ -80,12 +130,26 @@ describe("HawkListing", () => {
     getByText("Add a hawk");
   });
 
-  test("a new hawk can be added", () => {
+  test("the hawk editor can be opened", () => {
     const { getByText } = subject();
 
     fireEvent.click(getByText("Add hawk"));
 
     getByText("Add a new hawk");
+  });
+
+  test("a hawk can be saved", async () => {
+    const { getByText } = subject();
+
+    await act(async () => {
+      fireEvent.click(getByText("Add hawk"));
+
+      await waitForElement(() => getByText("Add a new hawk"));
+
+      fireEvent.click(getByText("Save"));
+    });
+
+    expect(saveHawk).toHaveBeenCalled();
   });
 
   const subject = (props?: HawkListingProps) => {
