@@ -1,0 +1,43 @@
+.HawkEditor {
+    margin-left: 15px;
+    padding: 25px;
+    width: calc(40vw - 115px);
+    height: 100%;
+    background: #ffffff;
+    border-radius: 5px;
+}
+
+.HawkEditor__body {
+    height: calc(100% - 60px);
+    margin-bottom: 25px;
+}
+
+.HawkEditor__footer {
+    text-align: right;
+}
+
+.HawkEditor__footer.HawkEditor__footer button {
+    margin-left: 15px;
+}
+
+.HawkEditor__specsContainer {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr;
+    grid-gap: 10px;
+    grid-row-gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.HawkEditor__header.HawkEditor__header.HawkEditor__header {
+    margin: 0;
+}
+
+.HawkEditor__gridContainer {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-gap: 10px;
+    grid-row-gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+}

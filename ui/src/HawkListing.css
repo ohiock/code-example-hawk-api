@@ -21,3 +21,15 @@
 .HawkListing__emptyState > div {
     margin-bottom: 25px;
 }
+
+.HawkListing__addButtonContainer {
+    margin-bottom: 15px;
+}
+
+.HawkListing__mainContainer {
+    display: flex;
+}
+
+.HawkListing__leftPanel {
+    flex: 1;
+}

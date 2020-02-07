@@ -80,6 +80,14 @@ describe("HawkListing", () => {
     getByText("Add a hawk");
   });
 
+  test("a new hawk can be added", () => {
+    const { getByText } = subject();
+
+    fireEvent.click(getByText("Add hawk"));
+
+    getByText("Add a new hawk");
+  });
+
   const subject = (props?: HawkListingProps) => {
     const defaultProps: HawkListingProps = {
       hawks
