@@ -1,3 +1,21 @@
+.App {
+  height: 100vh;
+  padding: 50px;
+
+  background: rgb(16,139,184);
+  background: linear-gradient(45deg, rgba(16,139,184,1) 0%, rgba(16,162,184,1) 50%, rgba(16,184,179,1) 100%);
+  background-size: 400% 400%;
+  animation: gradient 10s ease infinite;
+}
+
 a {
   color: #00B9B3;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+
+  50% { background-position: 100% 50%; }
+
+  100% { background-position: 0% 50%; }
 }

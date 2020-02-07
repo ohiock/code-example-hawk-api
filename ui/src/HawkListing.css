@@ -1,0 +1,13 @@
+.HawkListing__viewCol.HawkListing__viewCol.HawkListing__viewCol {
+    width: 15%;
+    text-align: center;
+}
+
+.HawkListing__tableCol {
+    width: 15%;
+}
+
+.HawkListing__filterNameInput {
+    width: 300px;
+    margin-right: 15px;
+}
