@@ -17,12 +17,15 @@ const HawkListing: React.FC = () => {
     filter: string,
     sortField: string,
     sortDir: string
-  ) =>
-    await getAllHawks({
+  ) => {
+    const allHawks = await getAllHawks({
       filter,
       sortField,
       sortDir
-    }).then((allHawks: Hawk[]) => setHawks(allHawks));
+    });
+
+    setHawks(allHawks);
+  };
 
   useEffect(() => {
     fetchHawks(filterInput, sortedColumn, sortedDirection);

@@ -26,7 +26,9 @@ interface GetAllHawksOptions {
   sortDir?: string;
 }
 
-export const getAllHawks = (options: GetAllHawksOptions): Promise<Hawk[]> => {
+export const getAllHawks = async (
+  options: GetAllHawksOptions
+): Promise<Hawk[]> => {
   const requestParams = [];
 
   !!options.filter && requestParams.push(`filter=${options.filter}`);
@@ -37,45 +39,43 @@ export const getAllHawks = (options: GetAllHawksOptions): Promise<Hawk[]> => {
 
   const paramsJoined = requestParams.join("&");
 
-  return fetch(`${apiRoot}/list?${paramsJoined}`).then(response => {
-    return response.json().then((data: { hawks: Hawk[] }) => {
-      return data.hawks;
-    });
-  });
+  const response = await fetch(`${apiRoot}/list?${paramsJoined}`);
+  const data: { hawks: Hawk[] } = await response.json();
+
+  return data.hawks;
 };
 
-export const saveHawk = (hawk: Hawk): Promise<Hawk> => {
-  return fetch(apiRoot, {
+export const saveHawk = async (hawk: Hawk): Promise<Hawk> => {
+  const response = await fetch(apiRoot, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(hawk)
-  }).then(response => {
-    return response.json().then((data: { hawk: Hawk }) => {
-      return data.hawk;
-    });
   });
+
+  const data: { hawk: Hawk } = await response.json();
+
+  return data.hawk;
 };
 
-export const updateHawk = (hawk: Hawk): Promise<Hawk> => {
-  return fetch(`${apiRoot}/${hawk.id}`, {
+export const updateHawk = async (hawk: Hawk): Promise<Hawk> => {
+  const response = await fetch(`${apiRoot}/${hawk.id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(hawk)
-  }).then(response => {
-    return response.json().then((data: { hawk: Hawk }) => {
-      return data.hawk;
-    });
   });
+  const data: { hawk: Hawk } = await response.json();
+
+  return data.hawk;
 };
 
-export const deleteHawk = (hawkId: number): Promise<void> => {
-  return fetch(`${apiRoot}/${hawkId}`, {
+export const deleteHawk = async (hawkId: number): Promise<void> => {
+  await fetch(`${apiRoot}/${hawkId}`, {
     method: "DELETE"
-  }).then(() => {
-    return Promise.resolve();
   });
+
+  return Promise.resolve();
 };
