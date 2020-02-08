@@ -13,6 +13,7 @@ Test the app
   - Leveraging Hooks API
 - Pulled in Semantic UI to speed up development
 - Testing was done with RTL / Jest
+- Keeping it dead simple, using BEM in CSS
 
 ### Notes
 I think the struggle with things like this is deciding when to call it. I could of course keep developing features on
