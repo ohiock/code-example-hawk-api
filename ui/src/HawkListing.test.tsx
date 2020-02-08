@@ -1,15 +1,17 @@
-import HawkListing, { HawkListingProps } from "./HawkListing";
+import HawkListing from "./HawkListing";
 import * as React from "react";
-import { render, fireEvent, waitForElement } from "@testing-library/react";
+import {
+  render,
+  fireEvent,
+  waitForElement,
+  wait
+} from "@testing-library/react";
 import { getAllHawks, Hawk, saveHawk } from "./api";
-import { act } from "react-dom/test-utils";
 
-jest.mock("./api", () => ({
-  saveHawk: jest.fn().mockResolvedValue({})
-}));
+jest.mock("./api");
 
 describe("HawkListing", () => {
-  let hawks: Hawk[] = [];
+  let hawks: Hawk[];
 
   beforeEach(() => {
     hawks = [
@@ -62,20 +64,26 @@ describe("HawkListing", () => {
         pictureUrl: ""
       }
     ];
+
+    (getAllHawks as jest.Mock).mockResolvedValue(hawks);
   });
 
-  test("displays a table of hawks", () => {
-    const { getAllByText } = subject();
+  test("displays a table of hawks", async () => {
+    const { getAllByText, getByText } = subject();
+
+    await waitForElement(() => getByText("Cooper's Hawk"));
 
     hawks.forEach(hawk => {
-      getAllByText(hawk.name);
+      getByText(hawk.name);
       getAllByText(hawk.size);
       getAllByText(hawk.gender);
     });
   });
 
-  test("the table has column headings", () => {
+  test("the table has column headings", async () => {
     const { getByText } = subject();
+
+    await waitForElement(() => getByText("Cooper's Hawk"));
 
     getByText("Name");
     getByText("Size");
@@ -85,30 +93,34 @@ describe("HawkListing", () => {
   test("the table can be sorted by the name column", async () => {
     const { getByText, getAllByTestId } = subject();
 
-    let allNameCols = getAllByTestId("HawkListing__nameCol");
+    await waitForElement(() => getByText("Cooper's Hawk"));
 
-    allNameCols.forEach((nameCol, i) => {
+    getAllByTestId("HawkListing__nameCol").forEach((nameCol, i) => {
       expect(nameCol.textContent).toEqual(hawks[i].name);
     });
 
     fireEvent.click(getByText("Name"));
     fireEvent.click(getByText("Name"));
 
-    allNameCols = getAllByTestId("HawkListing__nameCol");
-
-    allNameCols.forEach((nameCol, i) => {
-      expect(nameCol.textContent).toEqual(hawks[hawks.length - i - 1].name);
-    });
+    await wait(() =>
+      getAllByTestId("HawkListing__nameCol").forEach((nameCol, i) => {
+        expect(nameCol.textContent).toEqual(hawks[hawks.length - i - 1].name);
+      })
+    );
   });
 
-  test("each table row has a view button", () => {
-    const { getAllByText } = subject();
+  test("each table row has a view button", async () => {
+    const { getAllByText, getByText } = subject();
+
+    await waitForElement(() => getByText("Cooper's Hawk"));
 
     expect(getAllByText("View")).toHaveLength(3);
   });
 
-  test("the table can be filtered by name", () => {
+  test("the table can be filtered by name", async () => {
     const { getAllByTestId, getByPlaceholderText, getByText } = subject();
+
+    await waitForElement(() => getByText("Cooper's Hawk"));
 
     const input = getByPlaceholderText("Filter by name");
     const filterButton = getByText("Filter");
@@ -116,22 +128,26 @@ describe("HawkListing", () => {
     fireEvent.change(input, { target: { value: "Cooper" } });
     fireEvent.click(filterButton);
 
-    const allNameCols = getAllByTestId("HawkListing__nameCol");
-
-    expect(allNameCols).toHaveLength(1);
+    await wait(() =>
+      expect(getAllByTestId("HawkListing__nameCol")).toHaveLength(1)
+    );
   });
 
-  test("there is an empty state when no hawks exist", () => {
-    hawks = [];
+  test("there is an empty state when no hawks exist", async () => {
+    (getAllHawks as jest.Mock).mockResolvedValue([]);
 
     const { getByText } = subject();
 
-    getByText("There aren't currently any hawks to display");
+    await waitForElement(() =>
+      getByText("There aren't currently any hawks to display")
+    );
     getByText("Add a hawk");
   });
 
-  test("the hawk editor can be opened", () => {
+  test("the hawk editor can be opened", async () => {
     const { getByText } = subject();
+
+    await waitForElement(() => getByText("Cooper's Hawk"));
 
     fireEvent.click(getByText("Add hawk"));
 
@@ -139,24 +155,21 @@ describe("HawkListing", () => {
   });
 
   test("a hawk can be saved", async () => {
-    const { getByText } = subject();
+    const { getByText, container } = subject();
 
-    await act(async () => {
-      fireEvent.click(getByText("Add hawk"));
+    await waitForElement(() => getByText("Cooper's Hawk"));
 
-      await waitForElement(() => getByText("Add a new hawk"));
+    fireEvent.click(getByText("Add hawk"));
 
-      fireEvent.click(getByText("Save"));
-    });
+    await wait(() => getByText("Add a new hawk"));
 
-    expect(saveHawk).toHaveBeenCalled();
+    fireEvent.click(getByText("Save"));
+
+    await wait(() => expect(saveHawk).toHaveBeenCalled());
+    expect(getAllHawks).toHaveBeenCalled();
   });
 
-  const subject = (props?: HawkListingProps) => {
-    const defaultProps: HawkListingProps = {
-      hawks
-    };
-
-    return render(<HawkListing {...defaultProps} {...props} />);
+  const subject = () => {
+    return render(<HawkListing />);
   };
 });

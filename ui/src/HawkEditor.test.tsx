@@ -1,4 +1,4 @@
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, wait } from "@testing-library/react";
 import HawkEditor from "./HawkEditor";
 import * as React from "react";
 
@@ -14,13 +14,36 @@ describe("HawkEditor", () => {
     expect(onCancel).toHaveBeenCalled();
   });
 
-  test("can be saved", () => {
-    const {
-      getByPlaceholderText,
-      getByTestId,
-      getByText,
-      getAllByText
-    } = subject();
+  test("can be saved", async () => {
+    const editor = subject();
+    const { getByText, queryByDisplayValue } = editor;
+
+    populateHawk(editor);
+
+    fireEvent.click(getByText("Save"));
+
+    expect(onSave).toHaveBeenCalledWith({
+      id: 0,
+      name: "Sweet hawk",
+      size: "SMALL",
+      gender: "FEMALE",
+      lengthBegin: "50",
+      lengthEnd: "100",
+      wingspanBegin: "50",
+      wingspanEnd: "100",
+      weightBegin: "50",
+      weightEnd: "100",
+      pictureUrl: "https://google.com",
+      colorDescription: "Prolly brown.",
+      behaviorDescription: "They're super dope birbs.",
+      habitatDescription: "They live in pretty qewl places."
+    });
+
+    expect(queryByDisplayValue("Sweet hawk")).toEqual(null);
+  });
+
+  const populateHawk = editor => {
+    const { getByPlaceholderText, getByTestId, getAllByText } = editor;
 
     fireEvent.change(getByPlaceholderText("What do you call it?"), {
       target: { value: "Sweet hawk" }
@@ -74,26 +97,7 @@ describe("HawkEditor", () => {
     fireEvent.change(getByPlaceholderText("Favorite chill spots?"), {
       target: { value: "They live in pretty qewl places." }
     });
-
-    fireEvent.click(getByText("Save"));
-
-    expect(onSave).toHaveBeenCalledWith({
-      id: 0,
-      name: "Sweet hawk",
-      size: "SMALL",
-      gender: "FEMALE",
-      lengthBegin: "50",
-      lengthEnd: "100",
-      wingspanBegin: "50",
-      wingspanEnd: "100",
-      weightBegin: "50",
-      weightEnd: "100",
-      pictureUrl: "https://google.com",
-      colorDescription: "Prolly brown.",
-      behaviorDescription: "They're super dope birbs.",
-      habitatDescription: "They live in pretty qewl places."
-    });
-  });
+  };
 
   const subject = () => {
     const defaultProps = {

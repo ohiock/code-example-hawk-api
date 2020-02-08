@@ -1,5 +1,6 @@
 import {
   Button,
+  DropdownProps,
   Form,
   Header,
   Input,
@@ -47,6 +48,16 @@ const HawkEditor: React.FC<{
   onSave: (hawk: Hawk) => void;
 }> = ({ showEditor, onCancel, onSave }) => {
   const [hawk, setHawk] = useState<Hawk>(initialHawkState);
+
+  const onCancelLocal = () => {
+    setHawk(initialHawkState);
+    onCancel();
+  };
+
+  const onSaveLocal = () => {
+    setHawk(initialHawkState);
+    onSave(hawk);
+  };
 
   return (
     <Transition visible={showEditor} animation="scale" duration={500}>
@@ -226,8 +237,8 @@ const HawkEditor: React.FC<{
           </Form>
         </div>
         <div className="HawkEditor__footer">
-          <Button onClick={onCancel}>Cancel</Button>
-          <Button primary onClick={() => onSave(hawk)}>
+          <Button onClick={onCancelLocal}>Cancel</Button>
+          <Button primary onClick={onSaveLocal}>
             Save
           </Button>
         </div>

@@ -1,14 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Header, Input, Table } from "semantic-ui-react";
 import "./HawkListing.css";
-import { Hawk, saveHawk } from "./api";
+import { getAllHawks, Hawk, saveHawk } from "./api";
 import HawkEditor from "./HawkEditor";
 
-export interface HawkListingProps {
-  hawks: Hawk[];
-}
-
-const HawkListing: React.FC<HawkListingProps> = ({ hawks }) => {
+const HawkListing: React.FC = () => {
+  const [hawks, setHawks] = useState<Hawk[]>([]);
   const [filterInput, setFilterInput] = useState<string>("");
   const [filterQuery, setFilterQuery] = useState<string>("");
   const [sortedColumn, setSortedColumn] = useState<string>("");
@@ -16,6 +13,13 @@ const HawkListing: React.FC<HawkListingProps> = ({ hawks }) => {
     "ascending"
   );
   const [showEditor, setShowEditor] = useState(false);
+
+  const fetchHawks = async () =>
+    await getAllHawks().then(allHawks => setHawks(allHawks));
+
+  useEffect(() => {
+    fetchHawks();
+  }, []);
 
   const onSort = (columnToSort: string) => {
     if (sortedColumn !== columnToSort) {
@@ -34,10 +38,11 @@ const HawkListing: React.FC<HawkListingProps> = ({ hawks }) => {
   const onEnterFilterInput = (e: React.KeyboardEvent<HTMLInputElement>) =>
     e.key === "Enter" && setFilterQuery(filterInput);
 
-  const onSave = (hawk: Hawk) => {
-    saveHawk(hawk).then(() => {
-      setShowEditor(false);
-    });
+  const onSave = async (hawk: Hawk) => {
+    await saveHawk(hawk);
+    await fetchHawks();
+
+    setShowEditor(false);
   };
 
   const sortHawks = (a: Hawk, b: Hawk) => {
