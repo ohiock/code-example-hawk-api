@@ -1,6 +1,7 @@
-import { fireEvent, render, wait } from "@testing-library/react";
-import HawkEditor from "./HawkEditor";
+import { fireEvent, render, RenderResult } from "@testing-library/react";
+import HawkEditor, { HawkEditorProps } from "./HawkEditor";
 import * as React from "react";
+import { Hawk } from "./api";
 
 describe("HawkEditor", () => {
   const onCancel = jest.fn();
@@ -42,7 +43,45 @@ describe("HawkEditor", () => {
     expect(queryByDisplayValue("Sweet hawk")).toEqual(null);
   });
 
-  const populateHawk = editor => {
+  test("a specific hawk can be loaded into the editor", () => {
+    const selectedHawk: Hawk = {
+      id: 1003,
+      name: "An existing hawk",
+      size: "LARGE",
+      gender: "FEMALE",
+      lengthBegin: "5",
+      lengthEnd: "1",
+      wingspanBegin: "3",
+      wingspanEnd: "4",
+      weightBegin: "9",
+      weightEnd: "10",
+      pictureUrl: "https://google.com",
+      colorDescription: "Brownish.",
+      behaviorDescription: "Acts cool.",
+      habitatDescription: "Birbville."
+    };
+    const { getByDisplayValue, getByTestId, getByText } = subject({
+      selectedHawk
+    });
+
+    getByText("Edit hawk");
+
+    const { id, size, gender, ...hawkProperties } = selectedHawk;
+
+    expect(
+      getByTestId("HawkEditor__sizeSelect").innerHTML.includes("Large")
+    ).toBeTruthy();
+
+    expect(
+      getByTestId("HawkEditor__genderSelect").innerHTML.includes("Female")
+    ).toBeTruthy();
+
+    Object.keys(hawkProperties).forEach(key => {
+      getByDisplayValue(selectedHawk[key]);
+    });
+  });
+
+  const populateHawk = (editor: RenderResult) => {
     const { getByPlaceholderText, getByTestId, getAllByText } = editor;
 
     fireEvent.change(getByPlaceholderText("What do you call it?"), {
@@ -99,13 +138,14 @@ describe("HawkEditor", () => {
     });
   };
 
-  const subject = () => {
+  const subject = (props?: Partial<HawkEditorProps>) => {
     const defaultProps = {
+      selectedHawk: null,
       showEditor: true,
       onCancel,
       onSave
     };
 
-    return render(<HawkEditor {...defaultProps} />);
+    return render(<HawkEditor {...defaultProps} {...props} />);
   };
 });

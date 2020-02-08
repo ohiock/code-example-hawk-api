@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Header, Input, Table } from "semantic-ui-react";
+import { Button, Header, Input, Table, Transition } from "semantic-ui-react";
 import "./HawkListing.css";
 import { getAllHawks, Hawk, saveHawk } from "./api";
 import HawkEditor from "./HawkEditor";
@@ -13,7 +13,8 @@ const HawkListing: React.FC = () => {
   const [direction, setDirection] = useState<"ascending" | "descending">(
     "ascending"
   );
-  const [showEditor, setShowEditor] = useState(false);
+  const [showEditor, setShowEditor] = useState<boolean>(false);
+  const [selectedHawk, setSelectedHawk] = useState<Hawk | null>(null);
 
   const fetchHawks = async () =>
     await getAllHawks().then(allHawks => setHawks(allHawks));
@@ -39,11 +40,21 @@ const HawkListing: React.FC = () => {
   const onEnterFilterInput = (e: React.KeyboardEvent<HTMLInputElement>) =>
     e.key === "Enter" && setFilterQuery(filterInput);
 
+  const onCancel = () => {
+    setShowEditor(false);
+    setSelectedHawk(null);
+  };
+
   const onSave = async (hawk: Hawk) => {
     await saveHawk(hawk);
     await fetchHawks();
 
     setShowEditor(false);
+  };
+
+  const onSelectHawk = (hawk: Hawk) => {
+    setSelectedHawk(hawk);
+    setShowEditor(true);
   };
 
   const sortHawks = (a: Hawk, b: Hawk) => {
@@ -142,7 +153,7 @@ const HawkListing: React.FC = () => {
                 <Table.Cell>{HawkSize[hawk.size]}</Table.Cell>
                 <Table.Cell>{HawkGender[hawk.gender]}</Table.Cell>
                 <Table.Cell className="HawkListing__viewCol">
-                  <Button>
+                  <Button onClick={() => onSelectHawk(hawk)}>
                     View <i className="angle double right icon" />
                   </Button>
                 </Table.Cell>
@@ -152,11 +163,15 @@ const HawkListing: React.FC = () => {
         </Table>
       </div>
       <div>
-        <HawkEditor
-          showEditor={showEditor}
-          onCancel={() => setShowEditor(false)}
-          onSave={onSave}
-        />
+        <Transition visible={showEditor} animation="scale" duration={500}>
+          <div>
+            <HawkEditor
+              selectedHawk={selectedHawk}
+              onCancel={onCancel}
+              onSave={onSave}
+            />
+          </div>
+        </Transition>
       </div>
     </div>
   );

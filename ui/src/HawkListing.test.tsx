@@ -158,7 +158,7 @@ describe("HawkListing", () => {
   });
 
   test("a hawk can be saved", async () => {
-    const { getByText, container } = subject();
+    const { getByText } = subject();
 
     await waitForElement(() => getByText("Cooper's Hawk"));
 
@@ -170,6 +170,18 @@ describe("HawkListing", () => {
 
     await wait(() => expect(saveHawk).toHaveBeenCalled());
     expect(getAllHawks).toHaveBeenCalled();
+  });
+
+  test("opens the hawk editor with a specific hawk when its view button is clicked", async () => {
+    const { getByText, getAllByText, getByDisplayValue } = subject();
+
+    await waitForElement(() => getByText("Cooper's Hawk"));
+
+    fireEvent.click(getAllByText("View")[0]);
+
+    await waitForElement(() => getByText("Edit hawk"));
+
+    getByDisplayValue("Cooper's Hawk");
   });
 
   const subject = () => {
