@@ -117,12 +117,12 @@ describe("HawkListing", () => {
     );
   });
 
-  test("the table can be filtered by name", async () => {
+  test("the table can be filtered", async () => {
     const { getByPlaceholderText, getByText } = subject();
 
     await waitForElement(() => getByText("Cooper's Hawk"));
 
-    const input = getByPlaceholderText("Filter by name");
+    const input = getByPlaceholderText("Filter by name, color, etc");
     const filterButton = getByText("Filter");
 
     fireEvent.change(input, { target: { value: "Cooper" } });
@@ -144,7 +144,7 @@ describe("HawkListing", () => {
 
     (getAllHawks as jest.Mock).mockResolvedValue([]);
 
-    const input = getByPlaceholderText("Filter by name");
+    const input = getByPlaceholderText("Filter by name, color, etc");
     const filterButton = getByText("Filter");
 
     fireEvent.change(input, {
@@ -152,7 +152,9 @@ describe("HawkListing", () => {
     });
     fireEvent.click(filterButton);
 
-    await wait(() => getByText("We couldn't find any hawks with that name"));
+    await wait(() =>
+      getByText("We couldn't find any hawks that match the filter input")
+    );
     expect(queryAllByText("Add a hawk")).toHaveLength(0);
   });
 

@@ -82,8 +82,8 @@ const HawkListing: React.FC = () => {
             onClick: () =>
               fetchHawks(filterInput, sortedColumn, sortedDirection)
           }}
-          className="HawkListing__filterNameInput"
-          placeholder="Filter by name"
+          className="HawkListing__filterInput"
+          placeholder="Filter by name, color, etc"
           onChange={onChangeFilterInput}
           onKeyDown={onEnterFilterInput}
           value={filterInput}
@@ -131,7 +131,7 @@ const HawkListing: React.FC = () => {
                       {!filterInput &&
                         "There aren't currently any hawks to display"}
                       {filterInput &&
-                        "We couldn't find any hawks with that name"}
+                        "We couldn't find any hawks that match the filter input"}
                     </Header>
                   </div>
                   {!filterInput && (
