@@ -29,3 +29,9 @@ refreshing with how simple it is.
 - Could have included loading states and confirmation dialogs to improve the experience
 - Table pagination
 
+### Screens
+![Alt text](./screens/1.png?raw=true)
+
+![Alt text](screens/2.png?raw=true)
+
+![Alt text](screens/3.png?raw=true)
