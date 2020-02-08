@@ -1,51 +1,30 @@
-# Hawk Reference App
+### Getting started
+`npm install`
+Install all dependencies
 
-This project contains an api for managing a hawk species reference database.
-The goal of this project is for you to implement the UI screens to manage the hawk reference database.
+`npm start`
+Run the app
 
-The UI design is a single page app with two screens. Please
-reference the [screen mockups](Hawk%20Reference%20UI%20Mocks.pdf) for the design.
+`npm test`
+Test the app
 
-**NOTE:** *The github pdf render is not very good, please download the PDF for proper viewing.*
+### Technical decisions
+- Stuck with just React as Redux felt unnecessary for the size of this exercise
+  - Leveraging Hooks API
+- Pulled in Semantic UI to speed up development
+- Testing was done with RTL / Jest
 
+### Notes
+I think the struggle with things like this is deciding when to call it. I could of course keep developing features on
+this and fleshing it out more, but I felt it was in a good enough place.
 
-The `ui/` folder contains a stub of the Typescript/React/Redux based UI.
+I've never used SemanticUI before but really enjoyed it. I have a lot of experience with Material and found it
+refreshing with how simple it is.
 
-You should fork this project and implement the UI based on the design.
-The UI mocks are purposefully low fidelity and should be interpreted for actual component
-and view design.
+#### Could be improved
+- Input validation in the editor
+- Could have added react router to handle routing to specific hawks
+- Styles are pretty generic, leveraging most of what Semantic provides by default
+- Could have included loading states and confirmation dialogs to improve the experience
+- Table pagination
 
-Be creative and demonstrate your UI skills!
-
-
-## Dependencies
-
-To build and run the api you'll need a have [docker](https://www.docker.com/products/docker-desktop).
-
-## Build API Docker
-
-```
-$ docker-compose build
-```
-
-## Run API Server
-
-```
-$ docker-compose up -d
-```
-
-This will run the hawk api on `localhost:8000` and a `postgres` docker for the DB.
-
-Logs from the API server can be viewed by running `docker logs hawkapi -f`.
-
-## Stop API Server
-
-```
-docker-compose down
-```
-
-## API Routes
-
-See the [OpenAPI/Swagger](hawkapi-swagger-2.0.json) Spec for details.
-
-[Hawk Reference](https://www.allaboutbirds.org/news/search/?q=hawks)
