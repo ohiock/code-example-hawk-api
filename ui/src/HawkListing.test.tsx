@@ -7,6 +7,7 @@ import {
   wait
 } from "@testing-library/react";
 import { getAllHawks, Hawk, saveHawk } from "./api";
+import { HawkSize } from "./util";
 
 jest.mock("./api");
 
@@ -18,8 +19,8 @@ describe("HawkListing", () => {
       {
         id: 1,
         name: "Cooper's Hawk",
-        size: "small",
-        gender: "male",
+        size: "SMALL",
+        gender: "MALE",
         wingspanBegin: "",
         wingspanEnd: "",
         weightBegin: "",
@@ -34,8 +35,8 @@ describe("HawkListing", () => {
       {
         id: 2,
         name: "Ferruginous Hawk",
-        size: "medium",
-        gender: "male",
+        size: "MEDIUM",
+        gender: "FEMALE",
         wingspanBegin: "",
         wingspanEnd: "",
         weightBegin: "",
@@ -50,8 +51,8 @@ describe("HawkListing", () => {
       {
         id: 3,
         name: "Swainson's Hawk",
-        size: "large",
-        gender: "male",
+        size: "LARGE",
+        gender: "MALE",
         wingspanBegin: "",
         wingspanEnd: "",
         weightBegin: "",
@@ -75,9 +76,11 @@ describe("HawkListing", () => {
 
     hawks.forEach(hawk => {
       getByText(hawk.name);
-      getAllByText(hawk.size);
-      getAllByText(hawk.gender);
+      getByText(HawkSize[hawk.size]);
     });
+
+    expect(getAllByText("Male")).toHaveLength(2);
+    expect(getAllByText("Female")).toHaveLength(1);
   });
 
   test("the table has column headings", async () => {

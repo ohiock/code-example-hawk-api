@@ -3,6 +3,7 @@ import { Button, Header, Input, Table } from "semantic-ui-react";
 import "./HawkListing.css";
 import { getAllHawks, Hawk, saveHawk } from "./api";
 import HawkEditor from "./HawkEditor";
+import { HawkGender, HawkSize } from "./util";
 
 const HawkListing: React.FC = () => {
   const [hawks, setHawks] = useState<Hawk[]>([]);
@@ -138,8 +139,8 @@ const HawkListing: React.FC = () => {
                 <Table.Cell data-testid="HawkListing__nameCol">
                   {hawk.name}
                 </Table.Cell>
-                <Table.Cell>{hawk.size}</Table.Cell>
-                <Table.Cell>{hawk.gender}</Table.Cell>
+                <Table.Cell>{HawkSize[hawk.size]}</Table.Cell>
+                <Table.Cell>{HawkGender[hawk.gender]}</Table.Cell>
                 <Table.Cell className="HawkListing__viewCol">
                   <Button>
                     View <i className="angle double right icon" />
