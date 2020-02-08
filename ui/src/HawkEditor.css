@@ -13,7 +13,8 @@
 }
 
 .HawkEditor__footer {
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
 }
 
 .HawkEditor__footer.HawkEditor__footer button {

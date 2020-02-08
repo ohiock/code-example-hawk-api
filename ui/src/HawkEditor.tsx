@@ -43,12 +43,14 @@ const initialHawkState: Hawk = {
 export interface HawkEditorProps {
   selectedHawk: Hawk | null;
   onCancel: () => void;
+  onDelete: (hawkId: number) => void;
   onSave: (hawk: Hawk) => void;
 }
 
 const HawkEditor: React.FC<HawkEditorProps> = ({
   selectedHawk,
   onCancel,
+  onDelete,
   onSave
 }) => {
   const [hawk, setHawk] = useState<Hawk>(selectedHawk || initialHawkState);
@@ -62,6 +64,11 @@ const HawkEditor: React.FC<HawkEditorProps> = ({
   const onCancelLocal = () => {
     setHawk(initialHawkState);
     onCancel();
+  };
+
+  const onDeleteLocal = () => {
+    setHawk(initialHawkState);
+    onDelete(hawk.id);
   };
 
   const onSaveLocal = () => {
@@ -244,10 +251,17 @@ const HawkEditor: React.FC<HawkEditorProps> = ({
         </Form>
       </div>
       <div className="HawkEditor__footer">
-        <Button onClick={onCancelLocal}>Cancel</Button>
-        <Button primary onClick={onSaveLocal}>
-          Save
-        </Button>
+        {!!selectedHawk && (
+          <Button color="red" onClick={onDeleteLocal}>
+            Delete
+          </Button>
+        )}
+        <div>
+          <Button onClick={onCancelLocal}>Cancel</Button>
+          <Button primary onClick={onSaveLocal}>
+            Save
+          </Button>
+        </div>
       </div>
     </div>
   );

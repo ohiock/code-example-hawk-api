@@ -5,6 +5,7 @@ import { Hawk } from "./api";
 
 describe("HawkEditor", () => {
   const onCancel = jest.fn();
+  const onDelete = jest.fn();
   const onSave = jest.fn();
 
   test("can be closed", () => {
@@ -81,6 +82,38 @@ describe("HawkEditor", () => {
     });
   });
 
+  test("a specific hawk can be deleted", () => {
+    const selectedHawk: Hawk = {
+      id: 1003,
+      name: "An existing hawk",
+      size: "LARGE",
+      gender: "FEMALE",
+      lengthBegin: "5",
+      lengthEnd: "1",
+      wingspanBegin: "3",
+      wingspanEnd: "4",
+      weightBegin: "9",
+      weightEnd: "10",
+      pictureUrl: "https://google.com",
+      colorDescription: "Brownish.",
+      behaviorDescription: "Acts cool.",
+      habitatDescription: "Birbville."
+    };
+    const { getByText } = subject({
+      selectedHawk
+    });
+
+    fireEvent.click(getByText("Delete"));
+
+    expect(onDelete).toHaveBeenCalledWith(selectedHawk.id);
+  });
+
+  test("delete is not an option for new hawks", () => {
+    const { queryByText } = subject();
+
+    expect(queryByText("Delete")).toEqual(null);
+  });
+
   const populateHawk = (editor: RenderResult) => {
     const { getByPlaceholderText, getByTestId, getAllByText } = editor;
 
@@ -143,6 +176,7 @@ describe("HawkEditor", () => {
       selectedHawk: null,
       showEditor: true,
       onCancel,
+      onDelete,
       onSave
     };
 

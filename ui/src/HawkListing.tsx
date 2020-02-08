@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Header, Input, Table, Transition } from "semantic-ui-react";
 import "./HawkListing.css";
-import { getAllHawks, Hawk, saveHawk, updateHawk } from "./api";
+import { deleteHawk, getAllHawks, Hawk, saveHawk, updateHawk } from "./api";
 import HawkEditor from "./HawkEditor";
 import { HawkGender, HawkSize } from "./util";
 
@@ -48,6 +48,14 @@ const HawkListing: React.FC = () => {
     setSelectedHawk(null);
   };
 
+  const onDelete = async (hawkId: number) => {
+    await deleteHawk(hawkId);
+    await fetchHawks(filterInput, sortedColumn, sortedDirection);
+
+    setShowEditor(false);
+    setSelectedHawk(null);
+  };
+
   const onSave = async (hawk: Hawk) => {
     if (!selectedHawk) {
       await saveHawk(hawk);
@@ -58,6 +66,7 @@ const HawkListing: React.FC = () => {
     await fetchHawks(filterInput, sortedColumn, sortedDirection);
 
     setShowEditor(false);
+    setSelectedHawk(null);
   };
 
   const onSelectHawk = (hawk: Hawk) => {
@@ -178,6 +187,7 @@ const HawkListing: React.FC = () => {
             <HawkEditor
               selectedHawk={selectedHawk}
               onCancel={onCancel}
+              onDelete={onDelete}
               onSave={onSave}
             />
           </div>

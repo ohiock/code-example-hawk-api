@@ -44,25 +44,37 @@ export const getAllHawks = (options: GetAllHawksOptions): Promise<Hawk[]> => {
   });
 };
 
-export const saveHawk = (hawk: Hawk): Promise<void> => {
+export const saveHawk = (hawk: Hawk): Promise<Hawk> => {
   return fetch(apiRoot, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(hawk)
-  }).then(() => {
-    return Promise.resolve();
+  }).then(response => {
+    return response.json().then((data: { hawk: Hawk }) => {
+      return data.hawk;
+    });
   });
 };
 
-export const updateHawk = (hawk: Hawk): Promise<void> => {
+export const updateHawk = (hawk: Hawk): Promise<Hawk> => {
   return fetch(`${apiRoot}/${hawk.id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(hawk)
+  }).then(response => {
+    return response.json().then((data: { hawk: Hawk }) => {
+      return data.hawk;
+    });
+  });
+};
+
+export const deleteHawk = (hawkId: number): Promise<void> => {
+  return fetch(`${apiRoot}/${hawkId}`, {
+    method: "DELETE"
   }).then(() => {
     return Promise.resolve();
   });
