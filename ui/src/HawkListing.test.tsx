@@ -137,6 +137,25 @@ describe("HawkListing", () => {
     );
   });
 
+  test("displays empty state when filtering without any results", async () => {
+    const { getByPlaceholderText, getByText, queryAllByText } = subject();
+
+    await waitForElement(() => getByText("Cooper's Hawk"));
+
+    (getAllHawks as jest.Mock).mockResolvedValue([]);
+
+    const input = getByPlaceholderText("Filter by name");
+    const filterButton = getByText("Filter");
+
+    fireEvent.change(input, {
+      target: { value: "Something that won't return results" }
+    });
+    fireEvent.click(filterButton);
+
+    await wait(() => getByText("We couldn't find any hawks with that name"));
+    expect(queryAllByText("Add a hawk")).toHaveLength(0);
+  });
+
   test("each table row has a view button", async () => {
     const { getAllByText, getByText } = subject();
 

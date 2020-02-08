@@ -128,16 +128,22 @@ const HawkListing: React.FC = () => {
                 <Table.Cell colSpan="4" className="HawkListing__emptyState">
                   <div>
                     <Header as="h2">
-                      There aren't currently any hawks to display
+                      {!filterInput &&
+                        "There aren't currently any hawks to display"}
+                      {filterInput &&
+                        "We couldn't find any hawks with that name"}
                     </Header>
                   </div>
-                  <Button
-                    primary
-                    onClick={() => setShowEditor(true)}
-                    disabled={showEditor}
-                  >
-                    Add a hawk
-                  </Button>
+                  {!filterInput && (
+                    <Button
+                      primary
+                      className="HawkListing__emptyStateAddButton"
+                      onClick={() => setShowEditor(true)}
+                      disabled={showEditor}
+                    >
+                      Add a hawk
+                    </Button>
+                  )}
                 </Table.Cell>
               </Table.Row>
             )}

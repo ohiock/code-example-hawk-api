@@ -18,8 +18,8 @@
     padding: 50px 0;
 }
 
-.HawkListing__emptyState > div {
-    margin-bottom: 25px;
+.HawkListing__emptyStateAddButton.HawkListing__emptyStateAddButton.HawkListing__emptyStateAddButton {
+    margin-top: 25px;
 }
 
 .HawkListing__addButtonContainer {
