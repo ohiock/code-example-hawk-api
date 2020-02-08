@@ -64,7 +64,7 @@ const HawkListing: React.FC = () => {
     sortedDirection === "asc" ? "ascending" : "descending";
 
   return (
-    <div className="HawkListing__mainContainer">
+    <div className="HawkListing">
       <div className="HawkListing__leftPanel">
         <div className="HawkListing__addButtonContainer">
           <Button
@@ -155,7 +155,10 @@ const HawkListing: React.FC = () => {
                 <Table.Cell>{HawkSize[hawk.size]}</Table.Cell>
                 <Table.Cell>{HawkGender[hawk.gender]}</Table.Cell>
                 <Table.Cell className="HawkListing__viewCol">
-                  <Button onClick={() => onSelectHawk(hawk)}>
+                  <Button
+                    onClick={() => onSelectHawk(hawk)}
+                    disabled={!!selectedHawk && selectedHawk.id === hawk.id}
+                  >
                     View <i className="angle double right icon" />
                   </Button>
                 </Table.Cell>

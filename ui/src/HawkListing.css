@@ -1,3 +1,7 @@
+.HawkListing {
+    display: flex;
+}
+
 .HawkListing__viewCol.HawkListing__viewCol.HawkListing__viewCol {
     width: 15%;
     text-align: center;
@@ -24,10 +28,6 @@
 
 .HawkListing__addButtonContainer {
     margin-bottom: 15px;
-}
-
-.HawkListing__mainContainer {
-    display: flex;
 }
 
 .HawkListing__leftPanel {
