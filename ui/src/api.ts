@@ -55,3 +55,15 @@ export const saveHawk = (hawk: Hawk): Promise<void> => {
     return Promise.resolve();
   });
 };
+
+export const updateHawk = (hawk: Hawk): Promise<void> => {
+  return fetch(`${apiRoot}/${hawk.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(hawk)
+  }).then(() => {
+    return Promise.resolve();
+  });
+};

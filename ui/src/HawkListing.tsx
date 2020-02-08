@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Header, Input, Table, Transition } from "semantic-ui-react";
 import "./HawkListing.css";
-import { getAllHawks, Hawk, saveHawk } from "./api";
+import { getAllHawks, Hawk, saveHawk, updateHawk } from "./api";
 import HawkEditor from "./HawkEditor";
 import { HawkGender, HawkSize } from "./util";
 
@@ -49,7 +49,12 @@ const HawkListing: React.FC = () => {
   };
 
   const onSave = async (hawk: Hawk) => {
-    await saveHawk(hawk);
+    if (!selectedHawk) {
+      await saveHawk(hawk);
+    } else {
+      await updateHawk(hawk);
+    }
+
     await fetchHawks(filterInput, sortedColumn, sortedDirection);
 
     setShowEditor(false);

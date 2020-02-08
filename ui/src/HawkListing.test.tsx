@@ -6,7 +6,7 @@ import {
   waitForElement,
   wait
 } from "@testing-library/react";
-import { getAllHawks, Hawk, saveHawk } from "./api";
+import { getAllHawks, Hawk, saveHawk, updateHawk } from "./api";
 import { HawkSize } from "./util";
 
 jest.mock("./api");
@@ -199,6 +199,24 @@ describe("HawkListing", () => {
     fireEvent.click(getByText("Save"));
 
     await wait(() => expect(saveHawk).toHaveBeenCalled());
+    expect(getAllHawks).toHaveBeenCalled();
+  });
+
+  test("a hawk can be updated", async () => {
+    const { getByText, getAllByText, getByDisplayValue } = subject();
+
+    await waitForElement(() => getByText("Cooper's Hawk"));
+
+    fireEvent.click(getAllByText("View")[0]);
+
+    await wait(() => getByText("Edit hawk"));
+
+    fireEvent.change(getByDisplayValue("Cooper's Hawk"), {
+      target: { value: "Qooper's Hawk" }
+    });
+    fireEvent.click(getByText("Save"));
+
+    await wait(() => expect(updateHawk).toHaveBeenCalled());
     expect(getAllHawks).toHaveBeenCalled();
   });
 
