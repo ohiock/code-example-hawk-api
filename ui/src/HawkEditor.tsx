@@ -59,21 +59,21 @@ const HawkEditor: React.FC<HawkEditorProps> = ({
     if (!!selectedHawk && selectedHawk.id !== hawk.id) {
       setHawk(selectedHawk);
     }
-  }, [selectedHawk, hawk.id]);
+  }, [selectedHawk]);
 
   const onCancelLocal = () => {
-    setHawk(initialHawkState);
     onCancel();
+    setHawk(initialHawkState);
   };
 
   const onDeleteLocal = () => {
-    setHawk(initialHawkState);
     onDelete(hawk.id);
+    setHawk(initialHawkState);
   };
 
   const onSaveLocal = () => {
-    setHawk(initialHawkState);
     onSave(hawk);
+    setHawk(initialHawkState);
   };
 
   return (
