@@ -251,11 +251,13 @@ const HawkEditor: React.FC<HawkEditorProps> = ({
         </Form>
       </div>
       <div className="HawkEditor__footer">
-        {!!selectedHawk && (
-          <Button color="red" onClick={onDeleteLocal}>
-            Delete
-          </Button>
-        )}
+        <div>
+          {!!selectedHawk && (
+            <Button color="red" onClick={onDeleteLocal}>
+              Delete
+            </Button>
+          )}
+        </div>
         <div>
           <Button onClick={onCancelLocal}>Cancel</Button>
           <Button primary onClick={onSaveLocal}>
