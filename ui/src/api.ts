@@ -18,8 +18,26 @@ export interface Hawk {
   pictureUrl: string;
 }
 
-export const getAllHawks = (): Promise<Hawk[]> => {
-  return fetch(`${apiRoot}/list`).then(response => {
+interface GetAllHawksOptions {
+  filter?: string;
+  pageSize?: string;
+  pageToken?: string;
+  sortField?: string;
+  sortDir?: string;
+}
+
+export const getAllHawks = (options: GetAllHawksOptions): Promise<Hawk[]> => {
+  const requestParams = [];
+
+  !!options.filter && requestParams.push(`filter=${options.filter}`);
+  !!options.pageSize && requestParams.push(`pageSize=${options.pageSize}`);
+  !!options.pageToken && requestParams.push(`pageToken=${options.pageToken}`);
+  !!options.sortField && requestParams.push(`sortField=${options.sortField}`);
+  !!options.sortDir && requestParams.push(`sortDir=${options.sortDir}`);
+
+  const paramsJoined = requestParams.join("&");
+
+  return fetch(`${apiRoot}/list?${paramsJoined}`).then(response => {
     return response.json().then((data: { hawks: Hawk[] }) => {
       return data.hawks;
     });

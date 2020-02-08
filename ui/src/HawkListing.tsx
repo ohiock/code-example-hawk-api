@@ -8,37 +8,40 @@ import { HawkGender, HawkSize } from "./util";
 const HawkListing: React.FC = () => {
   const [hawks, setHawks] = useState<Hawk[]>([]);
   const [filterInput, setFilterInput] = useState<string>("");
-  const [filterQuery, setFilterQuery] = useState<string>("");
   const [sortedColumn, setSortedColumn] = useState<string>("");
-  const [direction, setDirection] = useState<"ascending" | "descending">(
-    "ascending"
-  );
+  const [sortedDirection, setSortedDirection] = useState<"asc" | "desc">("asc");
   const [showEditor, setShowEditor] = useState<boolean>(false);
   const [selectedHawk, setSelectedHawk] = useState<Hawk | null>(null);
 
-  const fetchHawks = async () =>
-    await getAllHawks().then(allHawks => setHawks(allHawks));
+  const fetchHawks = async (
+    filter: string,
+    sortField: string,
+    sortDir: string
+  ) =>
+    await getAllHawks({
+      filter,
+      sortField,
+      sortDir
+    }).then((allHawks: Hawk[]) => setHawks(allHawks));
 
   useEffect(() => {
-    fetchHawks();
+    fetchHawks(filterInput, sortedColumn, sortedDirection);
   }, []);
 
   const onSort = (columnToSort: string) => {
-    if (sortedColumn !== columnToSort) {
-      setSortedColumn(columnToSort);
-      setDirection("ascending");
+    setSortedColumn(columnToSort);
 
-      return;
-    }
+    const newDirection = sortedDirection === "asc" ? "desc" : "asc";
+    setSortedDirection(newDirection);
 
-    setDirection(direction === "ascending" ? "descending" : "ascending");
+    fetchHawks(filterInput, columnToSort, newDirection);
   };
 
   const onChangeFilterInput = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFilterInput(e.target.value);
 
   const onEnterFilterInput = (e: React.KeyboardEvent<HTMLInputElement>) =>
-    e.key === "Enter" && setFilterQuery(filterInput);
+    e.key === "Enter" && fetchHawks(filterInput, sortedColumn, sortedDirection);
 
   const onCancel = () => {
     setShowEditor(false);
@@ -47,7 +50,7 @@ const HawkListing: React.FC = () => {
 
   const onSave = async (hawk: Hawk) => {
     await saveHawk(hawk);
-    await fetchHawks();
+    await fetchHawks(filterInput, sortedColumn, sortedDirection);
 
     setShowEditor(false);
   };
@@ -57,24 +60,8 @@ const HawkListing: React.FC = () => {
     setShowEditor(true);
   };
 
-  const sortHawks = (a: Hawk, b: Hawk) => {
-    const aColumn = a[sortedColumn || "name"].toUpperCase();
-    const bColumn = b[sortedColumn || "name"].toUpperCase();
-
-    return direction === "ascending"
-      ? aColumn.localeCompare(bColumn)
-      : bColumn.localeCompare(aColumn);
-  };
-
-  const filterHawks = (hawk: Hawk) => {
-    if (!filterQuery) {
-      return hawk;
-    }
-
-    return hawk.name.toLowerCase().includes(filterQuery.toLowerCase());
-  };
-
-  const sortedHawks = [...hawks].filter(filterHawks).sort(sortHawks);
+  const tableFormattedDirection =
+    sortedDirection === "asc" ? "ascending" : "descending";
 
   return (
     <div className="HawkListing__mainContainer">
@@ -92,7 +79,8 @@ const HawkListing: React.FC = () => {
           action={{
             icon: "filter",
             content: "Filter",
-            onClick: () => setFilterQuery(filterInput)
+            onClick: () =>
+              fetchHawks(filterInput, sortedColumn, sortedDirection)
           }}
           className="HawkListing__filterNameInput"
           placeholder="Filter by name"
@@ -104,21 +92,29 @@ const HawkListing: React.FC = () => {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell
-                sorted={"name" === sortedColumn ? direction : undefined}
+                sorted={
+                  sortedColumn === "name" ? tableFormattedDirection : undefined
+                }
                 onClick={() => onSort("name")}
               >
                 Name
               </Table.HeaderCell>
               <Table.HeaderCell
                 className="HawkListing__tableCol"
-                sorted={"size" === sortedColumn ? direction : undefined}
+                sorted={
+                  sortedColumn === "size" ? tableFormattedDirection : undefined
+                }
                 onClick={() => onSort("size")}
               >
                 Size
               </Table.HeaderCell>
               <Table.HeaderCell
                 className="HawkListing__tableCol"
-                sorted={"gender" === sortedColumn ? direction : undefined}
+                sorted={
+                  sortedColumn === "gender"
+                    ? tableFormattedDirection
+                    : undefined
+                }
                 onClick={() => onSort("gender")}
               >
                 Gender
@@ -127,7 +123,7 @@ const HawkListing: React.FC = () => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {!sortedHawks.length && (
+            {!hawks.length && (
               <Table.Row>
                 <Table.Cell colSpan="4" className="HawkListing__emptyState">
                   <div>
@@ -145,7 +141,7 @@ const HawkListing: React.FC = () => {
                 </Table.Cell>
               </Table.Row>
             )}
-            {sortedHawks.map(hawk => (
+            {hawks.map(hawk => (
               <Table.Row key={hawk.id}>
                 <Table.Cell data-testid="HawkListing__nameCol">
                   {hawk.name}

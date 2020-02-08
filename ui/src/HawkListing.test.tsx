@@ -15,6 +15,8 @@ describe("HawkListing", () => {
   let hawks: Hawk[];
 
   beforeEach(() => {
+    (getAllHawks as jest.Mock).mockClear();
+
     hawks = [
       {
         id: 1,
@@ -104,24 +106,19 @@ describe("HawkListing", () => {
 
     fireEvent.click(getByText("Name"));
     fireEvent.click(getByText("Name"));
+    fireEvent.click(getByText("Name"));
 
     await wait(() =>
-      getAllByTestId("HawkListing__nameCol").forEach((nameCol, i) => {
-        expect(nameCol.textContent).toEqual(hawks[hawks.length - i - 1].name);
+      expect(getAllHawks).toHaveBeenNthCalledWith(4, {
+        filter: "",
+        sortField: "name",
+        sortDir: "desc"
       })
     );
   });
 
-  test("each table row has a view button", async () => {
-    const { getAllByText, getByText } = subject();
-
-    await waitForElement(() => getByText("Cooper's Hawk"));
-
-    expect(getAllByText("View")).toHaveLength(3);
-  });
-
   test("the table can be filtered by name", async () => {
-    const { getAllByTestId, getByPlaceholderText, getByText } = subject();
+    const { getByPlaceholderText, getByText } = subject();
 
     await waitForElement(() => getByText("Cooper's Hawk"));
 
@@ -132,8 +129,20 @@ describe("HawkListing", () => {
     fireEvent.click(filterButton);
 
     await wait(() =>
-      expect(getAllByTestId("HawkListing__nameCol")).toHaveLength(1)
+      expect(getAllHawks).toHaveBeenNthCalledWith(2, {
+        filter: "Cooper",
+        sortField: "",
+        sortDir: "asc"
+      })
     );
+  });
+
+  test("each table row has a view button", async () => {
+    const { getAllByText, getByText } = subject();
+
+    await waitForElement(() => getByText("Cooper's Hawk"));
+
+    expect(getAllByText("View")).toHaveLength(3);
   });
 
   test("there is an empty state when no hawks exist", async () => {
